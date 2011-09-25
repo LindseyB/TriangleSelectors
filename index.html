@@ -74,14 +74,14 @@
 			this.attr({opacity: 1.0});
 		};
 		window.onload = function() {
-			var genderPaper = Raphael("gender", 200, 200);
+			var genderPaper = Raphael("genderTriField", 200, 200);
 			var genderTri = genderPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#333", "stroke-width": 3, fill: "#efefef"});
 			var genderLabel1 = genderPaper.text(80,40, "none");
 			var genderLabel2 = genderPaper.text(30,140, "male");
 			var genderLabel3 = genderPaper.text(130,140, "female");
 			var genderTitle = genderPaper.text(80,20, "Gender Identity");
 
-			var sexualityPaper = Raphael("sexuality", 200, 200);
+			var sexualityPaper = Raphael("sexualityTriField", 200, 200);
 			var sexualityTri = sexualityPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#333", "stroke-width": 3, fill: "#efefef"});
 			var sexualityLabel1 = sexualityPaper.text(80,40, "indifferent");
 			var sexualityLabel2 = sexualityPaper.text(30,140, "men");
@@ -117,11 +117,11 @@
 	</script>
 </head>
 <body>
-	<div id="gender"></div>
+	<div id="genderTriField"></div>
 	<input type="hidden" id="genderVal" value=""></input>
 	<input type="hidden" id="genderXPos" value=""></input>
 	<input type="hidden" id="genderYPos" value=""></input>
-	<div id="sexuality"></div>
+	<div id="sexualityTriField"></div>
 	<input type="hidden" id="sexualityVal" value=""></input>
 	<input type="hidden" id="sexualityXPos" value=""></input>
 	<input type="hidden" id="sexualityYPos" value=""></input>
