@@ -1,0 +1,78 @@
+<html>
+<head>
+	<title>Gender/Sexuality Selectors</title>
+	<script src="raphael-min.js"></script>
+	<script type="text/javascript">
+		var start = function () {
+		// storing original coordinates
+			this.ox = this.attr("cx");
+			this.oy = this.attr("cy");
+			this.attr({opacity: 0.5});
+		},
+		move = function (dx, dy) {
+			// move will be called with dx and dy
+			var newy = this.oy + dy;
+			var newx = this.ox + dx;
+
+			// width of line = width * (y / height)
+			var widthOfLine = 100 * (newy / 80);
+
+			if (newx < (100 - widthOfLine/2) + 10) {
+				newx = (100 - widthOfLine/2) + 10;
+			}
+
+			if (newx < 30){
+				newx = 30;
+			}
+
+			if (newx > 130){
+				newx = 130;
+			}
+
+			if(newx > ((100 - widthOfLine) / 2) + widthOfLine) {
+				newx = ((100 - widthOfLine) / 2) + widthOfLine;
+			}
+
+			if(newy > 130){
+				newy = 130;
+			}
+
+			if(newy < 50){
+				newy = 50;
+			}
+
+			this.attr({cx: newx, cy: newy});
+		},
+		up = function () {
+			// restoring state
+			this.attr({opacity: 1.0});
+		};
+		window.onload = function() {
+			var genderPaper = Raphael("gender", 200, 200);
+			var genderTri = genderPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#666", "stroke-width": 3});
+			var genderLabel1 = genderPaper.text(80,40, "none");
+			var genderLabel2 = genderPaper.text(30,140, "male");
+			var genderLabel3 = genderPaper.text(130,140, "female");
+			var genderTitle = genderPaper.text(80,20, "Gender Identity");
+
+			var sexualityPaper = Raphael("sexuality", 200, 200);
+			var sexualityTri = sexualityPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#666", "stroke-width": 3});
+			var sexualityLabel1 = sexualityPaper.text(80,40, "indifferent");
+			var sexualityLabel2 = sexualityPaper.text(30,140, "men");
+			var sexualityLabel3 = sexualityPaper.text(130,140, "women");
+			var sexualityTitle = sexualityPaper.text(80,20, "Attracted to");
+
+			// clear fill opacity to allow for selection of entire circle
+			var genderSelector = genderPaper.circle(80,100,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
+			var sexualitySelector = sexualityPaper.circle(80,100,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0}); 
+
+			genderSelector.drag(move, start, up);
+			sexualitySelector.drag(move, start, up);
+		}
+	</script>
+</head>
+<body>
+	<div id="gender"></div>
+	<div id="sexuality"></div>
+</body>
+</html>
