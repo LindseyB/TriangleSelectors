@@ -9,8 +9,8 @@ Include the following in your header of the page you want to use the selectors:
 
 <pre>
 <code>
-	<script src="raphael-min.js"></script>
-	<script src="triangle-selectors.js"></script>
+<script src="raphael-min.js"></script>
+<script src="triangle-selectors.js"></script>
 </code>
 </pre>
 
@@ -20,10 +20,10 @@ the genderXPos and genderYPos have values in them the javascript will place the 
 
 <pre>
 <code>
-	<div id="genderTriField"></div>
-	<input type="hidden" id="genderVal" value=""></input>
-	<input type="hidden" id="genderXPos" value=""></input>
-	<input type="hidden" id="genderYPos" value=""></input>
+<div id="genderTriField"></div>
+<input type="hidden" id="genderVal" value=""></input>
+<input type="hidden" id="genderXPos" value=""></input>
+<input type="hidden" id="genderYPos" value=""></input>
 </code>
 </pre>
 
@@ -33,14 +33,14 @@ the sexualityXPos and sexualityYPos have values in them the javascript will plac
 
 <pre>
 <code>
-	<div id="sexualityTriField"></div>
-	<input type="hidden" id="sexualityVal" value=""></input>
-	<input type="hidden" id="sexualityXPos" value=""></input>
-	<input type="hidden" id="sexualityYPos" value=""></input>
+<div id="sexualityTriField"></div>
+<input type="hidden" id="sexualityVal" value=""></input>
+<input type="hidden" id="sexualityXPos" value=""></input>
+<input type="hidden" id="sexualityYPos" value=""></input>
 </code>
 </pre>
 
 
 h3. Related Information:
-* http://www.sarahdopp.com/blog/2010/designing-a-better-drop-down-menu-for-gender/
-* http://en.wikipedia.org/wiki/Kinsey_scale
+* "Designing a Better Drop-Down Menu for Gender":http://www.sarahdopp.com/blog/2010/designing-a-better-drop-down-menu-for-gender/
+* "Kinsey scale":http://en.wikipedia.org/wiki/Kinsey_scale
