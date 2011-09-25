@@ -15,18 +15,10 @@
 			var newx = this.ox + dx;
 
 			// width of line = width * (y / height)
-			var widthOfLine = 100 * (newy / 80);
+			var widthOfLine = Math.abs(100 * (newy / 80));
 
 			if (newx < (100 - widthOfLine/2) + 10) {
 				newx = (100 - widthOfLine/2) + 10;
-			}
-
-			if (newx < 30){
-				newx = 30;
-			}
-
-			if (newx > 130){
-				newx = 130;
 			}
 
 			if(newx > ((100 - widthOfLine) / 2) + widthOfLine) {
@@ -41,6 +33,20 @@
 				newy = 50;
 			}
 
+			// check the min boundry
+			if(newx > 130){
+				newx = 130;
+			}
+
+			if(newx < 30){
+				newx = 30;
+			}
+
+			// check the max boundry
+			if(newy == 50){
+				newx = 80;
+			}
+
 			this.attr({cx: newx, cy: newy});
 		},
 		up = function () {
@@ -49,14 +55,14 @@
 		};
 		window.onload = function() {
 			var genderPaper = Raphael("gender", 200, 200);
-			var genderTri = genderPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#666", "stroke-width": 3});
+			var genderTri = genderPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#333", "stroke-width": 3});
 			var genderLabel1 = genderPaper.text(80,40, "none");
 			var genderLabel2 = genderPaper.text(30,140, "male");
 			var genderLabel3 = genderPaper.text(130,140, "female");
 			var genderTitle = genderPaper.text(80,20, "Gender Identity");
 
 			var sexualityPaper = Raphael("sexuality", 200, 200);
-			var sexualityTri = sexualityPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#666", "stroke-width": 3});
+			var sexualityTri = sexualityPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#333", "stroke-width": 3});
 			var sexualityLabel1 = sexualityPaper.text(80,40, "indifferent");
 			var sexualityLabel2 = sexualityPaper.text(30,140, "men");
 			var sexualityLabel3 = sexualityPaper.text(130,140, "women");
