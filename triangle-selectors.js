@@ -67,6 +67,13 @@ move = function (dx, dy) {
 up = function () {
 	// restoring state
 	this.attr({opacity: 1.0});
+},
+
+over = function() {
+	document.body.style.cursor = "move";
+},
+out = function() {
+	document.body.style.cursor = "default";
 };
 window.onload = function() {
 	var genderPaper = Raphael("genderTriField", 200, 200);
@@ -106,6 +113,12 @@ window.onload = function() {
 	genderSelector = genderPaper.circle(genderXPos,genderYPos,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
 	var sexualitySelector = sexualityPaper.circle(sexualityXPos,sexualityYPos,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0}); 
 
+	// add drag events to gender and sexuality selectors 
 	genderSelector.drag(move, start, up);
 	sexualitySelector.drag(move, start, up);
+
+	genderSelector.mouseover(over);
+	genderSelector.mouseout(out);
+	sexualitySelector.mouseover(over);
+	sexualitySelector.mouseout(out);
 }
