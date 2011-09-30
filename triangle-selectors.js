@@ -6,63 +6,8 @@ var start = function () {
 	this.attr({opacity: 0.5});
 },
 move = function (dx, dy) {
-	// move will be called with dx and dy
-	var newy = this.oy + dy;
-	var newx = this.ox + dx;
-
-	// width of line = width * (y / height)
-	var widthOfLine = Math.abs(100 * (newy / 80));
-
-	if (newx < (100 - widthOfLine/2) + 10) {
-		newx = Math.round((100 - widthOfLine/2) + 10);
-	}
-
-	if(newx > ((100 - widthOfLine) / 2) + widthOfLine) {
-		newx = Math.round(((100 - widthOfLine) / 2) + widthOfLine);
-	}
-
-	if(newy > 130){
-		newy = 130;
-	}
-
-	if(newy < 50){
-		newy = 50;
-	}
-
-	// check the min boundry
-	if(newx > 130){
-		newx = 130;
-	}
-
-	if(newx < 30){
-		newx = 30;
-	}
-
-	// check the max boundry
-	if(newy == 50){
-		newx = 80;
-	}
-
-	this.attr({cx: newx, cy: newy});
-
-	// Distance to the 3 points
-	var mDistance = 100 - Math.round(Math.sqrt(((30 - newx)*(30 - newx))+((130 - newy)*(130 - newy))));
-	var fDistance = 100 - Math.round(Math.sqrt(((130 - newx)*(130 - newx))+((130 - newy)*(130 - newy))));
-	var nDistance = Math.round(((130 - newy)/80)*100);
-	
-
-
-	if(this == genderSelector){
-		// gender value given in (male, female, none)
-		document.getElementById("genderVal").value = "(" + mDistance + "," + fDistance + "," + nDistance + ")";
-		document.getElementById("genderXPos").value = newx;
-		document.getElementById("genderYPos").value = newy;
-	} else {
-		// sexuality value given in (men, women, indifferent)
-		document.getElementById("sexualityVal").value = "(" + mDistance + "," + fDistance + "," + nDistance + ")";
-		document.getElementById("sexualityXPos").value = newx;
-		document.getElementById("sexualityYPos").value = newy;				
-	}
+	// TODO: check for collisions 
+	// TODO: Update hidden fields with values
 },
 up = function () {
 	// restoring state
@@ -74,27 +19,69 @@ over = function() {
 },
 out = function() {
 	document.body.style.cursor = "default";
+},
+arcAt = function(paper, centerX, centerY, radius, startAngle, endAngle){
+	// TODO: draw arc at location
+	var startX = centerX+radius*Math.cos(startAngle*Math.PI/180);
+	var startY = centerY+radius*Math.sin(startAngle*Math.PI/180);
+	var endX = centerX+radius*Math.cos(endAngle*Math.PI/180);
+	var endY = centerY+radius*Math.sin(endAngle*Math.PI/180); 
+
+	var arcSVG = [radius, radius, 0, 0, 1, endX, endY].join(' ');
+	
+	return " a " + arcSVG;
+},
+reuleauxAt = function(paper,x,y,r) {
+	// TODO: update to draw reuleaux trinangle at specified location and radius	
+	r = r || 1;
+
+	var reuleauxFocals = function(x,y,r) {
+		r = r || 1;
+		var ret = new Array();
+		ret[0] = {x:x,y:y-r};
+		var diff_x = r * 0.5 * Math.sqrt(3);
+		ret[1] = {x:x-diff_x,y:y+(0.5 * r)};
+		ret[2] = {x:x+diff_x,y:ret[1].y};
+		return ret;
+	};
+
+	var cir_r = 2*r*r*(1-Math.cos(2/3*Math.PI));
+	cir_r = Math.sqrt(cir_r);
+
+	var points = reuleauxFocals(x,y,r);
+
+
+	var start = 2*Math.PI+(Math.PI/3);
+	var pathstr = " M" + points[1].x + " " + points[1].y;
+	//ctx.moveTo(points[1].x, points[1].y);
+	for (var i=0;i<3;i++) {
+		pathstr += arcAt(	paper,
+							points[i].x,
+							points[i].y, cir_r,
+							start+(Math.PI/3),
+							start
+						);
+		start -= (2*Math.PI)/3;
+	}
+
+	paper.path(pathstr).attr({stroke:"red"});
 };
 window.onload = function() {
 	var genderPaper = Raphael("genderTriField", 200, 200);
-	var genderTri = genderPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#333", "stroke-width": 3, fill: "#efefef"});
-	var genderLabel1 = genderPaper.text(80,40, "none");
-	var genderLabel2 = genderPaper.text(30,140, "male");
-	var genderLabel3 = genderPaper.text(130,140, "female");
-	var genderTitle = genderPaper.text(80,20, "Gender Identity");
+	// TODO: draw reuleaux triangles
+	// TODO: draw labels
+
+
+	reuleauxAt(genderPaper, 20, 20, 20);
 
 	var sexualityPaper = Raphael("sexualityTriField", 200, 200);
-	var sexualityTri = sexualityPaper.path("M 80 50 L 130 130 L 30 130 z").attr({stroke: "#333", "stroke-width": 3, fill: "#efefef"});
-	var sexualityLabel1 = sexualityPaper.text(80,40, "indifferent");
-	var sexualityLabel2 = sexualityPaper.text(30,140, "men");
-	var sexualityLabel3 = sexualityPaper.text(130,140, "women");
-	var sexualityTitle = sexualityPaper.text(80,20, "Attracted to");
+	//TODO: draw reuleaux triangles
+	//TODO: draw labels
 
-	
 	var genderXPos, genderYPos, sexualityXPos, sexualityYPos;
 
 	if(document.getElementById("genderXPos").value == "" || document.getElementById("genderYPos").value == "") {
-		genderXPos = 80;
+		genderXPos = 100;
 		genderYPos = 100;
 	} else {
 		genderXPos = parseInt(document.getElementById("genderXPos").value);
@@ -102,12 +89,12 @@ window.onload = function() {
 	}
 
 	if(document.getElementById("sexualityXPos").value == "" || document.getElementById("sexualityYPos").value == "") {
-		sexualityXPos = 80;
+		sexualityXPos = 100;
 		sexualityYPos = 100;
 	} else {
 		sexualityXPos = parseInt(document.getElementById("sexualityXPos").value);
 		sexualityYPos = parseInt(document.getElementById("sexualityYPos").value);				
-	}
+	}	
 	
 	// clear fill opacity to allow for selection of entire circle
 	genderSelector = genderPaper.circle(genderXPos,genderYPos,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
