@@ -6,7 +6,7 @@ var start = function () {
 	this.attr({opacity: 0.5});
 },
 move = function (dx, dy) {
-	// TODO: check for collisions 
+	// TODO: check for collisions
 	// TODO: Update hidden fields with values
 },
 up = function () {
@@ -22,17 +22,17 @@ out = function() {
 },
 arcAt = function(paper, centerX, centerY, radius, startAngle, endAngle){
 	// TODO: draw arc at location
-	var startX = centerX+radius*Math.cos(startAngle*Math.PI/180);
-	var startY = centerY+radius*Math.sin(startAngle*Math.PI/180);
-	var endX = centerX+radius*Math.cos(endAngle*Math.PI/180);
-	var endY = centerY+radius*Math.sin(endAngle*Math.PI/180); 
+	var startX = centerX+radius*Math.cos(startAngle);
+	var startY = centerY+radius*Math.sin(startAngle);
+	var endX = centerX+radius*Math.cos(endAngle);
+	var endY = centerY+radius*Math.sin(endAngle);
 
-	var arcSVG = [radius, radius, 0, 0, 1, endX, endY].join(' ');
-	
-	return " a " + arcSVG;
+	var arcSVG = [radius, radius, 0, 0, 0, endX, endY].join(' ');
+
+	return " A" + arcSVG;
 },
 reuleauxAt = function(paper,x,y,r) {
-	// TODO: update to draw reuleaux trinangle at specified location and radius	
+	// TODO: update to draw reuleaux trinangle at specified location and radius
 	r = r || 1;
 
 	var reuleauxFocals = function(x,y,r) {
@@ -50,10 +50,9 @@ reuleauxAt = function(paper,x,y,r) {
 
 	var points = reuleauxFocals(x,y,r);
 
-
 	var start = 2*Math.PI+(Math.PI/3);
 	var pathstr = " M" + points[1].x + " " + points[1].y;
-	//ctx.moveTo(points[1].x, points[1].y);
+
 	for (var i=0;i<3;i++) {
 		pathstr += arcAt(	paper,
 							points[i].x,
@@ -71,8 +70,7 @@ window.onload = function() {
 	// TODO: draw reuleaux triangles
 	// TODO: draw labels
 
-
-	reuleauxAt(genderPaper, 20, 20, 20);
+	reuleauxAt(genderPaper, 100, 100, 100);
 
 	var sexualityPaper = Raphael("sexualityTriField", 200, 200);
 	//TODO: draw reuleaux triangles
@@ -85,7 +83,7 @@ window.onload = function() {
 		genderYPos = 100;
 	} else {
 		genderXPos = parseInt(document.getElementById("genderXPos").value);
-		genderYPos = parseInt(document.getElementById("genderYPos").value);				
+		genderYPos = parseInt(document.getElementById("genderYPos").value);
 	}
 
 	if(document.getElementById("sexualityXPos").value == "" || document.getElementById("sexualityYPos").value == "") {
@@ -93,14 +91,14 @@ window.onload = function() {
 		sexualityYPos = 100;
 	} else {
 		sexualityXPos = parseInt(document.getElementById("sexualityXPos").value);
-		sexualityYPos = parseInt(document.getElementById("sexualityYPos").value);				
-	}	
-	
+		sexualityYPos = parseInt(document.getElementById("sexualityYPos").value);
+	}
+
 	// clear fill opacity to allow for selection of entire circle
 	genderSelector = genderPaper.circle(genderXPos,genderYPos,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
-	var sexualitySelector = sexualityPaper.circle(sexualityXPos,sexualityYPos,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0}); 
+	var sexualitySelector = sexualityPaper.circle(sexualityXPos,sexualityYPos,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
 
-	// add drag events to gender and sexuality selectors 
+	// add drag events to gender and sexuality selectors
 	genderSelector.drag(move, start, up);
 	sexualitySelector.drag(move, start, up);
 
