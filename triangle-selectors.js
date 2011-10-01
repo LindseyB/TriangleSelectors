@@ -2,56 +2,6 @@ var inBig = false;
 var inSmall = false;
 var genderSelector;
 
-var start = function () {
-// storing original coordinates
-	this.ox = this.attr("cx");
-	this.oy = this.attr("cy");
-	this.attr({opacity: 0.5});
-};
-
-move = function (dx, dy) {
-	var newx = this.ox + dx;
-	var newy = this.oy + dy;
-
-	// Snap to the middle of the small triangle if inside
-	if(inSmall){
-		newx = 100;
-		newy = 100;
-		this.attr({cx: newx, cy: newy});
-	}
-
-	if(inBig){
-		this.attr({cx: newx, cy: newy});
-	}
-
-	if(this == genderSelector){
-		// gender value given in (male, female, none)
-		// TODO: record gender value 
-
-		document.getElementById("genderXPos").value = newx;
-		document.getElementById("genderYPos").value = newy;
-	} else {
-		// sexuality value given in (men, women, indifferent)
-		// RODO: record sexuality value
-
-		document.getElementById("sexualityXPos").value = newx;
-		document.getElementById("sexualityYPos").value = newy;
-	}
-};
-
-up = function () {
-	// restoring state
-	this.attr({opacity: 1.0});
-};
-
-over = function() {
-
-};
-
-out = function() {
-
-};
-
 Raphael.fn.arc = function(centerX, centerY, radius, startAngle, endAngle) {
 	var endX = centerX+radius*Math.cos(endAngle);
 	var endY = centerY+radius*Math.sin(endAngle);
@@ -87,29 +37,107 @@ Raphael.fn.reuleaux = function(x, y, r) {
 	return this.path(pathstr);
 };
 
-function drawSelector(paper, x, y, size, attr_outer, attr_inner, inner_size) {
+function drawSelector(paper, x, y, size, attr_outer, attr_inner, caption, labels, start_x, start_y, inner_size) {
 	var tri_fit = 0.98;
 	if (!inner_size) inner_size = 0.17;
 
-	var tris = {};
+	var selector = {};
 
-	tris.outer = paper.reuleaux(x, y, size*tri_fit).attr(attr_outer);
-	tris.inner = paper.reuleaux(x, y, size*tri_fit*inner_size).attr(attr_inner);
+	selector.update = function(x,y) {
+		selector.x = x;
+		selector.y = y;
+	};
+	
+	// an event for when the knob moves (initially, do nothing)
+	selector.updated = function(x,y) {};
+
+	selector.tris = {};
+	selector.tris.outer = paper.reuleaux(x, y, size*tri_fit).attr(attr_outer);
+	selector.tris.inner = paper.reuleaux(x, y, size*tri_fit*inner_size).attr(attr_inner);
 
 	// hover events to deal with "collisions"
-	tris.outer.hover(function (event) {
+	selector.tris.outer.hover(function (event) {
 		inBig = true;
 	}, function (event) {
 		inBig = false;
 	});
 
-	tris.inner.hover(function (event){
+	selector.tris.inner.hover(function (event){
 		inSmall = true;
 	}, function (event){
 		inSmall = false;
 	});
 
-	return tris;
+	// draw non-colliding gender labels
+	// TODO: make these coords relative to the size! scale if necessary!
+	selector.labels = {};
+	selector.labels.middle = paper.text(100,100,labels.middle).hover(function (event){inSmall = true;}, function (event){inSmall = false;});
+	selector.labels.top = paper.text(100,20, labels.top).hover(function (event){inBig = true;}, function (event){inBig = false;});
+	selector.labels.left = paper.text(40,140,labels.left).hover(function (event){inBig = true;}, function (event){inBig = false;});
+	selector.labels.right = paper.text(165,140, labels.right).hover(function (event){inBig = true;}, function (event){inBig = false;});
+	selector.caption = paper.text(100,180,caption);
+
+	// Set knob coords
+	if (start_x) {
+		selector.x = start_x;
+	}
+	else {
+		selector.x = x;
+	}
+
+	if (start_y) {
+		selector.y = start_y;
+	}
+	else {
+		selector.y = y;
+	}
+
+	// selector
+	selector.knob = paper.circle(selector.x,selector.y,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
+
+	// add drag events to knob
+	
+	// What happens when the knob is dragged
+	selector.knob.drag(
+		// on move
+		function (dx, dy) {
+			var newx = this.ox + dx;
+			var newy = this.oy + dy;
+
+			// Snap to the middle of the small triangle if inside
+			if(inSmall){
+				newx = 100;
+				newy = 100;
+				this.attr({cx: newx, cy: newy});
+			}
+
+			if(inBig){
+				this.attr({cx: newx, cy: newy});
+			}
+
+			selector.updated(newx, newy);
+		},
+		// on start
+		function() {
+			// storing original coordinates
+			this.ox = this.attr("cx");
+			this.oy = this.attr("cy");
+			this.attr({opacity: 0.5});
+		},
+		// when done
+		function() {
+			// restoring state
+			this.attr({opacity: 1.0});
+		});
+
+	// extra event for when we mouse out of the knob
+	selector.knob.mouseout(
+		function() {
+			// restoring state
+			this.attr({opacity: 1.0});
+		});
+
+	return selector;
 }
 
 window.onload = function() {
@@ -124,55 +152,30 @@ window.onload = function() {
 	attr.inner = {fill: "#fff", stroke: "#558", "stroke-width": "1.15"};
 
 	gender.paper = Raphael("genderTriField", 200, 200);
+	gender.selector = drawSelector(gender.paper,
+	                           100, 100, 100,
+							   attr.outer, attr.inner,
+							   "Gender Identity",
+							   {middle: "none", top: "all", left: "female", right: "male"},
+	                              parseInt(document.getElementById("genderXPos").value) || 100,
+	                              parseInt(document.getElementById("genderYPos").value) || 100);
 
-	gender.tris = drawSelector(gender.paper, 100, 100, 100, attr.outer, attr.inner);
-
-	// draw non-colliding gender labels 
-	gender.paper.text(100,100,"none").hover(function (event){inSmall = true;}, function (event){inSmall = false;});
-	gender.paper.text(100,20, "all").hover(function (event){inBig = true;}, function (event){inBig = false;});
-	gender.paper.text(40,140,"female").hover(function (event){inBig = true;}, function (event){inBig = false;});
-	gender.paper.text(165,140, "male").hover(function (event){inBig = true;}, function (event){inBig = false;});
-	gender.paper.text(100,180,"Gender Identity");
+	gender.selector.updated = function(newx,newy) {
+		document.getElementById("genderXPos").value = newx;
+		document.getElementById("genderYPos").value = newy;
+	}
 
 	sexuality.paper = Raphael("sexualityTriField", 200, 200);
-	sexuality.tris = drawSelector(sexuality.paper, 100, 100, 100, attr.outer, attr.inner);
+	sexuality.selector = drawSelector(sexuality.paper,
+	                              100, 100, 100,
+								  attr.outer, attr.inner,
+								  "Attracted To",
+		  					      {middle: "none", top: "all", left: "women", right: "men"},
+	                              parseInt(document.getElementById("sexualityXPos").value) || 100,
+	                              parseInt(document.getElementById("sexualityYPos").value) || 100);
 
-	// draw non-colliding sexuality labels
-	sexuality.paper.text(100,100,"none").hover(function (event){inSmall = true;}, function (event){inSmall = false;});
-	sexuality.paper.text(100,20, "all").hover(function (event){inBig = true;}, function (event){inBig = false;});
-	sexuality.paper.text(40,140,"women").hover(function (event){inBig = true;}, function (event){inBig = false;});
-	sexuality.paper.text(165,140, "men").hover(function (event){inBig = true;}, function (event){inBig = false;});
-	sexuality.paper.text(100,180,"Attracted To");
-
-	//TODO: Remove this redundancy
-	if(document.getElementById("genderXPos").value == "" || document.getElementById("genderYPos").value == "") {
-		gender.x = 100;
-		gender.y = 100;
-	} else {
-		gender.x = parseInt(document.getElementById("genderXPos").value);
-		gender.y = parseInt(document.getElementById("genderYPos").value);
+	sexuality.selector.updated = function(newx,newy) {
+		document.getElementById("sexualityXPos").value = newx;
+		document.getElementById("sexualityYPos").value = newy;
 	}
-
-	if(document.getElementById("sexualityXPos").value == "" || document.getElementById("sexualityYPos").value == "") {
-		sexuality.x = 100;
-		sexuality.y = 100;
-	} else {
-		sexuality.x = parseInt(document.getElementById("sexualityXPos").value);
-		sexuality.y = parseInt(document.getElementById("sexualityYPos").value);
-	}
-
-	// clear fill opacity to allow for selection of entire circle
-	gender.selector = gender.paper.circle(gender.x,gender.y,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
-	sexuality.selector = sexuality.paper.circle(sexuality.x,sexuality.y,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
-
-	genderSelector = gender.selector;
-
-	// add drag events to gender and sexuality selectors
-	gender.selector.drag(move, start, up);
-	sexuality.selector.drag(move, start, up);
-
-	gender.selector.mouseover(over);
-	gender.selector.mouseout(out);
-	sexuality.selector.mouseover(over);
-	sexuality.selector.mouseout(out);
 }
