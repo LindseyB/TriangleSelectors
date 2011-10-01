@@ -96,8 +96,8 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, caption, labels
 
 			// Snap to the middle of the small triangle if inside
 			if(selector.inSmall){
-				newx = 100;
-				newy = 100;
+				newx = x;
+				newy = y;
 				this.attr({cx: newx, cy: newy});
 			}
 
