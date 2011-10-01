@@ -1,12 +1,3 @@
-Raphael.fn.arc = function(centerX, centerY, radius, startAngle, endAngle) {
-	var endX = centerX+radius*Math.cos(endAngle);
-	var endY = centerY+radius*Math.sin(endAngle);
-
-	var arcSVG = [radius, radius, 0, 0, 0, endX, endY].join(',');
-
-	return this.path("A" + arcSVG);
-};
-
 Raphael.fn.reuleaux = function(x, y, r) {
 	r = r || 1;
 
@@ -70,10 +61,10 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, caption, labels
 	// draw non-colliding gender labels
 	// TODO: make these coords relative to the size! scale if necessary!
 	selector.labels = {};
-	selector.labels.middle = paper.text(100,100,labels.middle).hover(function (event){inSmall = true;}, function (event){inSmall = false;});
-	selector.labels.top = paper.text(100,20, labels.top).hover(function (event){inBig = true;}, function (event){inBig = false;});
-	selector.labels.left = paper.text(40,140,labels.left).hover(function (event){inBig = true;}, function (event){inBig = false;});
-	selector.labels.right = paper.text(165,140, labels.right).hover(function (event){inBig = true;}, function (event){inBig = false;});
+	selector.labels.middle = paper.text(100,100,labels.middle).hover(function (event){selector.inSmall = true;}, function (event){selector.inSmall = false;});
+	selector.labels.top = paper.text(100,20, labels.top).hover(function (event){selector.inBig = true;}, function (event){selector.inBig = false;});
+	selector.labels.left = paper.text(40,140,labels.left).hover(function (event){selector.inBig = true;}, function (event){selector.inBig = false;});
+	selector.labels.right = paper.text(165,140, labels.right).hover(function (event){selector.inBig = true;}, function (event){selector.inBig = false;});
 	selector.caption = paper.text(100,180,caption);
 
 	// Set knob coords
