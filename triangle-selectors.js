@@ -124,23 +124,24 @@ window.onload = function() {
 	attr.inner = {fill: "#fff", stroke: "#558", "stroke-width": "1.15"};
 
 	gender.paper = Raphael("genderTriField", 200, 200);
+
 	gender.tris = drawSelector(gender.paper, 100, 100, 100, attr.outer, attr.inner);
 
-	// draw gender labels
-	gender.paper.text(100,100,"none");
-	gender.paper.text(100,20, "all");
-	gender.paper.text(40,140,"female");
-	gender.paper.text(165,140, "male");
+	// draw non-colliding gender labels 
+	gender.paper.text(100,100,"none").hover(function (event){inSmall = true;}, function (event){inSmall = false;});
+	gender.paper.text(100,20, "all").hover(function (event){inBig = true;}, function (event){inBig = false;});
+	gender.paper.text(40,140,"female").hover(function (event){inBig = true;}, function (event){inBig = false;});
+	gender.paper.text(165,140, "male").hover(function (event){inBig = true;}, function (event){inBig = false;});
 	gender.paper.text(100,180,"Gender Identity");
 
 	sexuality.paper = Raphael("sexualityTriField", 200, 200);
 	sexuality.tris = drawSelector(sexuality.paper, 100, 100, 100, attr.outer, attr.inner);
 
-	// draw sexuality labels
-	sexuality.paper.text(100,100,"none");
-	sexuality.paper.text(100,20, "all");
-	sexuality.paper.text(40,140,"women");
-	sexuality.paper.text(165,140, "men");
+	// draw non-colliding sexuality labels
+	sexuality.paper.text(100,100,"none").hover(function (event){inSmall = true;}, function (event){inSmall = false;});
+	sexuality.paper.text(100,20, "all").hover(function (event){inBig = true;}, function (event){inBig = false;});
+	sexuality.paper.text(40,140,"women").hover(function (event){inBig = true;}, function (event){inBig = false;});
+	sexuality.paper.text(165,140, "men").hover(function (event){inBig = true;}, function (event){inBig = false;});
 	sexuality.paper.text(100,180,"Attracted To");
 
 	//TODO: Remove this redundancy
