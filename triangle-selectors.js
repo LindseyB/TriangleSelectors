@@ -1,7 +1,3 @@
-var inBig = false;
-var inSmall = false;
-var genderSelector;
-
 Raphael.fn.arc = function(centerX, centerY, radius, startAngle, endAngle) {
 	var endX = centerX+radius*Math.cos(endAngle);
 	var endY = centerY+radius*Math.sin(endAngle);
@@ -55,17 +51,20 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, caption, labels
 	selector.tris.outer = paper.reuleaux(x, y, size*tri_fit).attr(attr_outer);
 	selector.tris.inner = paper.reuleaux(x, y, size*tri_fit*inner_size).attr(attr_inner);
 
+	selector.inBig = false;
+	selector.inSmall = false;
+
 	// hover events to deal with "collisions"
 	selector.tris.outer.hover(function (event) {
-		inBig = true;
+		selector.inBig = true;
 	}, function (event) {
-		inBig = false;
+		selector.inBig = false;
 	});
 
 	selector.tris.inner.hover(function (event){
-		inSmall = true;
+		selector.inSmall = true;
 	}, function (event){
-		inSmall = false;
+		selector.inSmall = false;
 	});
 
 	// draw non-colliding gender labels
@@ -96,7 +95,7 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, caption, labels
 	selector.knob = paper.circle(selector.x,selector.y,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
 
 	// add drag events to knob
-	
+
 	// What happens when the knob is dragged
 	selector.knob.drag(
 		// on move
@@ -105,13 +104,13 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, caption, labels
 			var newy = this.oy + dy;
 
 			// Snap to the middle of the small triangle if inside
-			if(inSmall){
+			if(selector.inSmall){
 				newx = 100;
 				newy = 100;
 				this.attr({cx: newx, cy: newy});
 			}
 
-			if(inBig){
+			if(selector.inBig){
 				this.attr({cx: newx, cy: newy});
 			}
 
