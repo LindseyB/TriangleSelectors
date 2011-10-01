@@ -27,11 +27,11 @@ up = function () {
 };
 
 over = function() {
-	//document.body.style.cursor = "move";
+
 };
 
 out = function() {
-	//document.body.style.cursor = "default";
+
 };
 
 Raphael.fn.arc = function(centerX, centerY, radius, startAngle, endAngle) {
@@ -78,22 +78,18 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, inner_size) {
 	tris.outer = paper.reuleaux(x, y, size*tri_fit).attr(attr_outer);
 	tris.inner = paper.reuleaux(x, y, size*tri_fit*inner_size).attr(attr_inner);
 
-	// mouse over and mouse out events to deal with collisions
-	tris.outer.mouseover(function (event) {
+	// hover events to deal with "collisions"
+	tris.outer.hover(function (event) {
 		inBig = true;
-	});
-
-	tris.outer.mouseout(function (event) {
+	}, function (event) {
 		inBig = false;
 	});
 
-	tris.inner.mouseover(function (event){
+	tris.inner.hover(function (event){
 		inSmall = true;
-	});
-
-	tris.inner.mouseout(function (event){
+	}, function (event){
 		inSmall = false;
-	});	
+	});
 
 	return tris;
 }
@@ -109,13 +105,25 @@ window.onload = function() {
 	attr.outer = {fill: "#ccf", stroke: "#225", "stroke-width": "1.35"};
 	attr.inner = {fill: "#fff", stroke: "#558", "stroke-width": "1.15"};
 
-	//TODO: draw labels
-
 	gender.paper = Raphael("genderTriField", 200, 200);
 	gender.tris = drawSelector(gender.paper, 100, 100, 100, attr.outer, attr.inner);
 
+	// draw gender labels
+	gender.paper.text(100,100,"none");
+	gender.paper.text(100,20, "all");
+	gender.paper.text(40,140,"female");
+	gender.paper.text(165,140, "male");
+	gender.paper.text(100,180,"Gender Identity");
+
 	sexuality.paper = Raphael("sexualityTriField", 200, 200);
 	sexuality.tris = drawSelector(sexuality.paper, 100, 100, 100, attr.outer, attr.inner);
+
+	// draw sexuality labels
+	sexuality.paper.text(100,100,"none");
+	sexuality.paper.text(100,20, "all");
+	sexuality.paper.text(40,140,"women");
+	sexuality.paper.text(165,140, "men");
+	sexuality.paper.text(100,180,"Attracted To");
 
 	//TODO: Remove this redundancy
 	if(document.getElementById("genderXPos").value == "" || document.getElementById("genderYPos").value == "") {
