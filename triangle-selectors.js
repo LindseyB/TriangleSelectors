@@ -1,5 +1,7 @@
 var inBig = false;
 var inSmall = false;
+var genderSelector;
+
 var start = function () {
 // storing original coordinates
 	this.ox = this.attr("cx");
@@ -8,16 +10,32 @@ var start = function () {
 };
 
 move = function (dx, dy) {
-	// TODO: check for collisions
-	// TODO: Update hidden fields with values
+	var newx = this.ox + dx;
+	var newy = this.oy + dy;
 
 	// Snap to the middle of the small triangle if inside
 	if(inSmall){
-		this.attr({cx: 100, cy: 100});
+		newx = 100;
+		newy = 100;
+		this.attr({cx: newx, cy: newy});
 	}
 
 	if(inBig){
-		this.attr({cx: this.ox + dx, cy: this.oy + dy});
+		this.attr({cx: newx, cy: newy});
+	}
+
+	if(this == genderSelector){
+		// gender value given in (male, female, none)
+		// TODO: record gender value 
+
+		document.getElementById("genderXPos").value = newx;
+		document.getElementById("genderYPos").value = newy;
+	} else {
+		// sexuality value given in (men, women, indifferent)
+		// RODO: record sexuality value
+
+		document.getElementById("sexualityXPos").value = newx;
+		document.getElementById("sexualityYPos").value = newy;
 	}
 };
 
@@ -145,6 +163,8 @@ window.onload = function() {
 	// clear fill opacity to allow for selection of entire circle
 	gender.selector = gender.paper.circle(gender.x,gender.y,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
 	sexuality.selector = sexuality.paper.circle(sexuality.x,sexuality.y,5).attr({stroke: "#999", "stroke-width": 2, fill: "#fff", "fill-opacity": 0.0});
+
+	genderSelector = gender.selector;
 
 	// add drag events to gender and sexuality selectors
 	gender.selector.drag(move, start, up);
