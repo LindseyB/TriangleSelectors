@@ -1,5 +1,5 @@
-var genderSelector;
-
+var inBig = false;
+var inSmall = false;
 var start = function () {
 // storing original coordinates
 	this.ox = this.attr("cx");
@@ -10,6 +10,15 @@ var start = function () {
 move = function (dx, dy) {
 	// TODO: check for collisions
 	// TODO: Update hidden fields with values
+
+	// Snap to the middle of the small triangle if inside
+	if(inSmall){
+		this.attr({cx: 100, cy: 100});
+	}
+
+	if(inBig){
+		this.attr({cx: this.ox + dx, cy: this.oy + dy});
+	}
 };
 
 up = function () {
@@ -18,11 +27,11 @@ up = function () {
 };
 
 over = function() {
-	document.body.style.cursor = "move";
+	//document.body.style.cursor = "move";
 };
 
 out = function() {
-	document.body.style.cursor = "default";
+	//document.body.style.cursor = "default";
 };
 
 Raphael.fn.arc = function(centerX, centerY, radius, startAngle, endAngle) {
@@ -56,6 +65,7 @@ Raphael.fn.reuleaux = function(x, y, r) {
 	}
 
 	pathstr += "z";
+
 	return this.path(pathstr);
 };
 
@@ -67,6 +77,23 @@ function drawSelector(paper, x, y, size, attr_outer, attr_inner, inner_size) {
 
 	tris.outer = paper.reuleaux(x, y, size*tri_fit).attr(attr_outer);
 	tris.inner = paper.reuleaux(x, y, size*tri_fit*inner_size).attr(attr_inner);
+
+	// mouse over and mouse out events to deal with collisions
+	tris.outer.mouseover(function (event) {
+		inBig = true;
+	});
+
+	tris.outer.mouseout(function (event) {
+		inBig = false;
+	});
+
+	tris.inner.mouseover(function (event){
+		inSmall = true;
+	});
+
+	tris.inner.mouseout(function (event){
+		inSmall = false;
+	});	
 
 	return tris;
 }
