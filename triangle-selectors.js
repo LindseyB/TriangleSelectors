@@ -421,9 +421,6 @@ function transformPoint(newx, newy, x,y,size,size_inner) {
 }
 
 window.onload = function() {
-	// TODO: draw reuleaux triangles
-	// TODO: draw labels
-
 	var gender = {};
 	var sexuality = {};
 	var attr = {};
@@ -431,7 +428,7 @@ window.onload = function() {
 	attr.outer = {fill: "#ccf", stroke: "#225", "stroke-width": "1.35"};
 	attr.inner = {fill: "#fff", stroke: "#558", "stroke-width": "1.15"};
 
-	gender.paper = Raphael("genderTriField", 500, 300);
+	gender.paper = Raphael("genderTriField", 200, 200);
 	gender.selector = drawSelector(gender.paper,
 	                           100, 100, 100,
 							   attr.outer, attr.inner,
@@ -449,14 +446,27 @@ window.onload = function() {
 		document.getElementById("genderXPos").value = newx;
 		document.getElementById("genderYPos").value = newy;
 
+		var triple = {}; // stores (a)ll, (f)emale, (m)ale "values"
+
 		var point = transformPoint(newx,newy,100,100,98,98*0.17);
+		var points = getPoints(100,100,98);
 
-		if (lastcir1) lastcir1.remove();
-		lastcir1 = gender.paper.circle(point.x+200,point.y,3);
+		// length of a side of the triangle
+		var MAX = Math.sqrt(Math.pow(points[0].x - points[1].x, 2) + Math.pow(points[0].y - points[1].y, 2));
+		
+		if(newx == 100 && newy == 100){
+			// inside the hole
+			triple.a = 0;
+			triple.f = 0;
+			triple.m = 0;
+		} else {
+			triple.a = ((MAX - Math.sqrt(Math.pow(points[0].x - point.x, 2) + Math.pow(points[0].y - point.y, 2)))/MAX) * 100;
+			triple.f = ((MAX - Math.sqrt(Math.pow(points[1].x - point.x, 2) + Math.pow(points[1].y - point.y, 2)))/MAX) * 100;
+			triple.m = ((MAX - Math.sqrt(Math.pow(points[2].x - point.x, 2) + Math.pow(points[2].y - point.y, 2)))/MAX) * 100;
+		}
+
+		document.getElementById("genderVal").value = JSON.stringify(triple);
 	}
-
-	gender.tri = gender.paper.triangle(300,100,98).attr(attr.outer);
-	gender.foo = gender.paper.circle(300,100,1).attr(attr.inner);
 
 	sexuality.paper = Raphael("sexualityTriField", 200, 200);
 	sexuality.selector = drawSelector(sexuality.paper,
@@ -470,5 +480,26 @@ window.onload = function() {
 	sexuality.selector.updated = function(newx,newy) {
 		document.getElementById("sexualityXPos").value = newx;
 		document.getElementById("sexualityYPos").value = newy;
+
+		var triple = {}; // stores (a)ll, (f)emale, (m)ale "values"
+
+		var point = transformPoint(newx,newy,100,100,98,98*0.17);
+		var points = getPoints(100,100,98);
+
+		// length of a side of the triangle
+		var MAX = Math.sqrt(Math.pow(points[0].x - points[1].x, 2) + Math.pow(points[0].y - points[1].y, 2));
+		
+		if(newx == 100 && newy == 100){
+			// inside the hole
+			triple.a = 0;
+			triple.f = 0;
+			triple.m = 0;
+		} else {
+			triple.a = ((MAX - Math.sqrt(Math.pow(points[0].x - point.x, 2) + Math.pow(points[0].y - point.y, 2)))/MAX) * 100;
+			triple.f = ((MAX - Math.sqrt(Math.pow(points[1].x - point.x, 2) + Math.pow(points[1].y - point.y, 2)))/MAX) * 100;
+			triple.m = ((MAX - Math.sqrt(Math.pow(points[2].x - point.x, 2) + Math.pow(points[2].y - point.y, 2)))/MAX) * 100;
+		}
+
+		document.getElementById("sexualityVal").value = JSON.stringify(triple);
 	}
 }
