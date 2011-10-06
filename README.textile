@@ -1,6 +1,6 @@
 h1. Triangle Selectors
 
-An attempt to create a new method to collect gender identity and sexaulity information
+An attempt to create a new method to collect gender identity and sexuality information
 that doesn't hold to the exclusivity of the gender binary or sexuality binaries. 
 
 h2. To Use
@@ -14,7 +14,9 @@ Include the following in your header of the page you want to use the selectors:
 </code>
 </pre>
 
-This code will display the gender triangle selector field and will set the genderVal gender value given in (male, female, none). 
+This code will display the gender triangle selector field and will set the genderVal gender value given in a json object as:
+@{"a":[all value],"f":[female value],"m": [male value]}@. The "hole" in the middle of these graphs is a special case where all
+of the values will be 0. 
 The genderXPos and genderYPos will be the absolute coordinates of the circle selector in the field. When the page is loaded if
 the genderXPos and genderYPos have values in them the javascript will place the selector starting at that position. 
 
@@ -27,7 +29,9 @@ the genderXPos and genderYPos have values in them the javascript will place the 
 </code>
 </pre>
 
-This code will display the sexuality triangle selector field and will set the sexualityVal gender value given in (men, women, indifferent). 
+This code will display the sexuality triangle selector field and will set the sexualityVal gender value given in a json object as:
+@{"a":[all value],"w":[women value],"m": [men value]}@. The "hole" in the middle of these graphs is a special case where all
+of the values will be 0. 
 The sexualityXPos and sexualityYPos will be the absolute coordinates of the circle selector in the field. When the page is loaded if
 the sexualityXPos and sexualityYPos have values in them the javascript will place the selector starting at that position. 
 
@@ -44,3 +48,4 @@ the sexualityXPos and sexualityYPos have values in them the javascript will plac
 h3. Related Information:
 * "Designing a Better Drop-Down Menu for Gender":http://www.sarahdopp.com/blog/2010/designing-a-better-drop-down-menu-for-gender/
 * "Kinsey scale":http://en.wikipedia.org/wiki/Kinsey_scale
+* "Reuleaux triangle":http://en.wikipedia.org/wiki/Reuleaux_triangle

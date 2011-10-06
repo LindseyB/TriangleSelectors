@@ -481,7 +481,7 @@ window.onload = function() {
 		document.getElementById("sexualityXPos").value = newx;
 		document.getElementById("sexualityYPos").value = newy;
 
-		var triple = {}; // stores (a)ll, (f)emale, (m)ale "values"
+		var triple = {}; // stores (a)ll, (w)omen, (m)en "values"
 
 		var point = transformPoint(newx,newy,100,100,98,98*0.17);
 		var points = getPoints(100,100,98);
@@ -492,11 +492,11 @@ window.onload = function() {
 		if(newx == 100 && newy == 100){
 			// inside the hole
 			triple.a = 0;
-			triple.f = 0;
+			triple.w = 0;
 			triple.m = 0;
 		} else {
 			triple.a = ((MAX - Math.sqrt(Math.pow(points[0].x - point.x, 2) + Math.pow(points[0].y - point.y, 2)))/MAX) * 100;
-			triple.f = ((MAX - Math.sqrt(Math.pow(points[1].x - point.x, 2) + Math.pow(points[1].y - point.y, 2)))/MAX) * 100;
+			triple.w = ((MAX - Math.sqrt(Math.pow(points[1].x - point.x, 2) + Math.pow(points[1].y - point.y, 2)))/MAX) * 100;
 			triple.m = ((MAX - Math.sqrt(Math.pow(points[2].x - point.x, 2) + Math.pow(points[2].y - point.y, 2)))/MAX) * 100;
 		}
 
